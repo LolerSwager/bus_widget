@@ -1,3 +1,5 @@
+loadingscreen();
+
 //Sætter array med endpoint urls
 const endpoints = [
     'http://xmlopen.rejseplanen.dk/bin/rest.exe/departureBoard?id=851400602&rttime&format=json&useBus=1',
@@ -45,27 +47,52 @@ async function fetchArray(url) {
     }
 }
 
-let buildview = function(firstfive, currentTime){
+function loadingscreen(){
+    //main container
+    const loadingContainer = document.createElement('div');
+    loadingContainer.classList.add('bus-container');
+
+    //loading data
+    loadingtext = document.createElement('h2');
+    loadingtext.innerText="Loading data";
+    loadingContainer.appendChild(loadingtext);
     
-    let busContainer = document.createElement('div');
+    //loading text
+    loadingicon = document.createElement('img');
+    loadingicon.src="img/loading.svg";
+    loadingContainer.appendChild(loadingicon);
+
+    //insætter main til html "post"
+    const post = document.getElementById('post');
+    post.appendChild(loadingContainer);
+}
+
+function buildview(firstfive, currentTime){
+    
+    const busContainer = document.createElement('div');
     busContainer.classList.add('bus-container');
 
-    let containerHeader = document.createElement('div');
+    //laver header boxen
+    const containerHeader = document.createElement('div');
     containerHeader.classList.add('container-header');
 
-    let containerHeaderImg = document.createElement('img');
+    //laver header billed
+    const containerHeaderImg = document.createElement('img');
     containerHeaderImg.src = "test";
-    let containerHeaderText = document.createElement('h2');
+    //laver header text
+    const containerHeaderText = document.createElement('h2');
     containerHeaderText.innerHTML = "Bus tider";
 
+    //flytter header boxen til mian container
     busContainer.appendChild(containerHeader);
 
+    //flytter header billed og text til header box
     containerHeader.appendChild(containerHeaderImg);
     containerHeader.appendChild(containerHeaderText);
 
-    let containerBody = document.createElement('div');
+    // laver body boxen
+    const containerBody = document.createElement('div');
     containerBody.classList.add('container_body');
-
     // Looper array
     for(let element of firstfive) {
         // Splitter api dato til et array
@@ -81,27 +108,33 @@ let buildview = function(firstfive, currentTime){
         // Beregner antal hele minutter
         const minutes = ((api_time - (currentTime/1000))/60).toFixed(0);
 
-        let containerBodyLine = document.createElement('h3');
-        containerBodyLine.innerText = element.line;
-
-        let containerBodydirection = document.createElement('h3');
-        containerBodydirection.innerText = element.direction;
-
-        let containerBodytime = document.createElement('h3');
-        containerBodytime.innerText = `${minutes} Min`;
-
+        //laver en box til h3'erne 
         const containerContent = document.createElement('div');
         containerContent.classList.add('container-content')
 
+        //laver h3 med line i
+        const containerBodyLine = document.createElement('h3');
+        containerBodyLine.innerText = element.line;
+
+        //laver h3 med direction i
+        const containerBodydirection = document.createElement('h3');
+        containerBodydirection.innerText = element.direction;
+
+        //laver h3 med time i
+        const containerBodytime = document.createElement('h3');
+        containerBodytime.innerText = `${minutes} Min`;
+
+        //flytter alle h3'erne til containerContent
         containerContent.appendChild(containerBodyLine);
         containerContent.appendChild(containerBodydirection);
         containerContent.appendChild(containerBodytime);
 
+        //flytter containerContent med h3 i til body box
         containerBody.appendChild(containerContent);
-
-
+    
         busContainer.appendChild(containerBody);
-        let post = document.getElementById('post');
+
+        const post = document.getElementById('post');
         post.appendChild(busContainer);
     }
 }
